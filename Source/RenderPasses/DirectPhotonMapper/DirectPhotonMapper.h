@@ -52,5 +52,7 @@ public:
     virtual bool onMouseEvent(const MouseEvent& mouseEvent) override { return false; }
     virtual bool onKeyEvent(const KeyboardEvent& keyEvent) override { return false; }
 
+    void DirectPhotonMapper::preparePhotonTrace(RenderContext* pRenderContext, const RenderData& renderData);
+
 private:
 };

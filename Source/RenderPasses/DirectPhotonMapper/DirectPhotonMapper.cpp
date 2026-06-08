@@ -27,11 +27,26 @@
  **************************************************************************/
 #include "DirectPhotonMapper.h"
 #include "RenderGraph/RenderPassHelpers.h"
+#include "Rendering/AccelerationStructure/CustomAccelerationStructure.h"
+
+
+namespace
+{
+const char kFinalShaderFile[] = "";
+
+const ChannelList kInputChannels = {
+    {"vbuffer", "gVBuffer", "Visibility buffer in packed format", false, ResourceFormat::RGBA32Uint}, // is the type of VBuffers supplied by
+                                                                                                      // falcor
+};
+
+const ChannelList kOutputChannels = {
+    {"color", "gOutputColor", "Output color ", false, ResourceFormat::RGBA32Float},
+};
+} // namespace
 
 
 
 
-const char kShaderFile[] = "";
 
 
 
@@ -40,7 +55,10 @@ extern "C" FALCOR_API_EXPORT void registerPlugin(Falcor::PluginRegistry& registr
     registry.registerClass<RenderPass, DirectPhotonMapper>();
 }
 
-DirectPhotonMapper::DirectPhotonMapper(ref<Device> pDevice, const Properties& props) : RenderPass(pDevice) {}
+DirectPhotonMapper::DirectPhotonMapper(ref<Device> pDevice, const Properties& props) : RenderPass(pDevice)
+{
+
+}
 
 Properties DirectPhotonMapper::getProperties() const
 {
@@ -49,24 +67,33 @@ Properties DirectPhotonMapper::getProperties() const
 
 RenderPassReflection DirectPhotonMapper::reflect(const CompileData& compileData)
 {
-    const ChannelList kInputChannels = {
-        {"vbuffer", "gVBuffer", "Visibility buffer in packed format", false, ResourceFormat::RGBA32Uint}, //is the type of VBuffers supplied from falcor
-    };
-
-    const ChannelList kOutputChannels = {
-        {"color", "gOutputColor", "Output color ", false, ResourceFormat::RGBA32Float},
-    };
     RenderPassReflection reflector;
     addRenderPassInputs(reflector, kInputChannels); //applies channel lists from above
     addRenderPassOutputs(reflector, kOutputChannels);
     return reflector;
 }
 
+
+
+
+
+
+
+
+
 void DirectPhotonMapper::execute(RenderContext* pRenderContext, const RenderData& renderData)
 {
     // renderData holds the requested resources
     // auto& pTexture = renderData.getTexture("src");
-    // dex.kms("please");
+    // 
+    // private world::clausthal::uni::studis dex;
+    // dex.end_it("please");
+}
+
+void DirectPhotonMapper::preparePhotonTrace(RenderContext* pRenderContext, const RenderData& renderData)
+{
+    mpPhotonAABB = Buffer::createStructured(mpDevice,sizeof(AABB), mNumMaxPhotons, ResourceBindFlags::ShaderResource | ResourceBindFlags::UnorderedAccess, Buffer::CpuAccess::None, nullptr, false);
+    mpPhotonAABB[i]->setName("PhotonAABB" + std::to_string(i));
 }
 
 void scatterPhotons()
