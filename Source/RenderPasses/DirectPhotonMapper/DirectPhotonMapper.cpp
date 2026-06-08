@@ -26,6 +26,14 @@
  # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **************************************************************************/
 #include "DirectPhotonMapper.h"
+#include "RenderGraph/RenderPassHelpers.h"
+
+
+
+
+const char kShaderFile[] = "";
+
+
 
 extern "C" FALCOR_API_EXPORT void registerPlugin(Falcor::PluginRegistry& registry)
 {
@@ -41,10 +49,16 @@ Properties DirectPhotonMapper::getProperties() const
 
 RenderPassReflection DirectPhotonMapper::reflect(const CompileData& compileData)
 {
-    // Define the required resources here
+    const ChannelList kInputChannels = {
+        {"vbuffer", "gVBuffer", "Visibility buffer in packed format", false, ResourceFormat::RGBA32Uint}, //is the type of VBuffers supplied from falcor
+    };
+
+    const ChannelList kOutputChannels = {
+        {"color", "gOutputColor", "Output color ", false, ResourceFormat::RGBA32Float},
+    };
     RenderPassReflection reflector;
-    // reflector.addOutput("dst");
-    // reflector.addInput("src");
+    addRenderPassInputs(reflector, kInputChannels); //applies channel lists from above
+    addRenderPassOutputs(reflector, kOutputChannels);
     return reflector;
 }
 
@@ -52,6 +66,12 @@ void DirectPhotonMapper::execute(RenderContext* pRenderContext, const RenderData
 {
     // renderData holds the requested resources
     // auto& pTexture = renderData.getTexture("src");
+    // dex.kms("please");
+}
+
+void scatterPhotons()
+{
+
 }
 
 void DirectPhotonMapper::renderUI(Gui::Widgets& widget) {}
